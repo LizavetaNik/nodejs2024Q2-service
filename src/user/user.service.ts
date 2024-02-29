@@ -3,7 +3,7 @@ import {
   ForbiddenException,
   NotFoundException,
 } from '@nestjs/common';
-import { usersDb } from 'src/database/users';
+import { usersDb } from 'src/database/database';
 import { ICreateUserDto, IUpdatePasswordDto } from 'src/types/types';
 import { v4 as uuidv4 } from 'uuid';
 import { validate } from 'uuid';
