@@ -1,3 +1,5 @@
+import { IsInt, IsNotEmpty, IsString } from 'class-validator';
+
 export interface IUser {
   id: string; // uuid v4
   login: string;
@@ -7,13 +9,21 @@ export interface IUser {
   updatedAt: number; // timestamp of last update
 }
 
-export interface ICreateUserDto {
+export class ICreateUserDto {
+  @IsString()
+  @IsNotEmpty()
   login: string;
+  @IsString()
+  @IsNotEmpty()
   password: string;
 }
 
-export interface IUpdatePasswordDto {
+export class IUpdatePasswordDto {
+  @IsString()
+  @IsNotEmpty()
   oldPassword: string; // previous password
+  @IsString()
+  @IsNotEmpty()
   newPassword: string; // new password
 }
 
@@ -25,10 +35,17 @@ export interface ITrack {
   duration: number; // integer number
 }
 
-export interface ITrackDto {
+export class ITrackDto {
+  @IsString()
+  @IsNotEmpty()
   name: string;
+  @IsString()
+  @IsNotEmpty()
   artistId: string | null;
+  @IsString()
+  @IsNotEmpty()
   albumId: string | null;
+  @IsInt()
   duration: number;
 }
 
