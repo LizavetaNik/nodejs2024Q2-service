@@ -9,7 +9,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { TrackService } from './track.servise';
-import { ITrackDto, ITrack } from 'src/types/types';
+import { ITrackDto } from './track-types';
 
 @Controller('track')
 export class TrackController {

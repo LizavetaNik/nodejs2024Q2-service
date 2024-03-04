@@ -1,8 +1,9 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { trackDb } from 'src/database/database';
-import { ITrackDto, ITrack, ITypeOperation } from 'src/types/types';
+import { ITrackDto } from './track-types';
 import { validate } from 'uuid';
 import { v4 as uuidv4 } from 'uuid';
+import { ITypeOperation } from 'src/types/types';
 
 export class TrackService {
   getTracks() {

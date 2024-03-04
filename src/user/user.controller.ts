@@ -9,7 +9,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { ICreateUserDto, IUpdatePasswordDto } from 'src/types/types';
+import { ICreateUserDto, IUpdatePasswordDto } from './user-types';
 
 @Controller('user')
 export class UserController {
