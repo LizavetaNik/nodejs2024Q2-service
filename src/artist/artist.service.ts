@@ -1,12 +1,12 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { albumDb, artistsDb, trackDb } from 'src/database/database';
+import { db } from 'src/database/database';
 import { ICreateArtistDto, IUpdateArtistDto } from './artist-types';
 import { validate } from 'uuid';
 import { v4 as uuidv4 } from 'uuid';
 
 export class ArtistService {
   getArtists() {
-    return artistsDb;
+    return db.artistsDb;
   }
 
   createArtist(artistDto: ICreateArtistDto) {
@@ -17,7 +17,7 @@ export class ArtistService {
       name: artistDto.name,
       grammy: artistDto.grammy,
     };
-    artistsDb.push(artistData);
+    db.artistsDb.push(artistData);
     return artistData;
   }
 
@@ -29,8 +29,8 @@ export class ArtistService {
     this.validateArtistId(id);
     this.validateUpdateArtist(updateArtistDto);
 
-    const index = artistsDb.findIndex((item) => item.id === id);
-    const artist = artistsDb.find((artist) => artist.id === id);
+    const index = db.artistsDb.findIndex((item) => item.id === id);
+    const artist = db.artistsDb.find((artist) => artist.id === id);
 
     const newArtistData = {
       ...artist,
@@ -38,8 +38,8 @@ export class ArtistService {
       grammy: updateArtistDto.grammy,
     };
     try {
-      artistsDb[index] = newArtistData;
-      return artistsDb[index];
+      db.artistsDb[index] = newArtistData;
+      return db.artistsDb[index];
     } catch (err) {
       console.log(err);
       return false;
@@ -48,17 +48,17 @@ export class ArtistService {
 
   deleteArtist(id: string) {
     this.validateArtistId(id);
-    const index = artistsDb.findIndex((item) => item.id === id);
+    const index = db.artistsDb.findIndex((item) => item.id === id);
     if (index === -1) throw new NotFoundException('artist not found');
 
-    albumDb.forEach((album) => {
+    db.albumDb.forEach((album) => {
       if (album.artistId === id) album.artistId = null;
     });
-    trackDb.forEach((track) => {
+    db.trackDb.forEach((track) => {
       if (track.artistId === id) track.artistId = null;
     });
 
-    artistsDb.splice(index, 1);
+    db.artistsDb.splice(index, 1);
     return 'The record is found and deleted';
   }
 
@@ -67,7 +67,7 @@ export class ArtistService {
       throw new BadRequestException('Id is invalid (not uuid)'); // 400
     }
 
-    const artist = artistsDb.find((item) => item.id === id);
+    const artist = db.artistsDb.find((item) => item.id === id);
 
     if (!artist) {
       throw new NotFoundException('This artist is not exist'); // 404
