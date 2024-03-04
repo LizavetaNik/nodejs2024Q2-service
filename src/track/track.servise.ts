@@ -1,5 +1,5 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { trackDb } from 'src/database/database';
+import { db } from 'src/database/database';
 import { ITrackDto } from './track-types';
 import { validate } from 'uuid';
 import { v4 as uuidv4 } from 'uuid';
@@ -7,7 +7,7 @@ import { ITypeOperation } from 'src/types/types';
 
 export class TrackService {
   getTracks() {
-    return trackDb;
+    return db.trackDb;
   }
 
   createTrack(trackDto: ITrackDto) {
@@ -20,7 +20,7 @@ export class TrackService {
       artistId: trackDto?.artistId || null,
       albumId: trackDto?.albumId || null,
     };
-    trackDb.push(trackData);
+    db.trackDb.push(trackData);
     return trackData;
   }
 
@@ -32,17 +32,17 @@ export class TrackService {
     this.validateTrackId(id);
     this.validateArtistAndAlbum(updateTrackDto, ITypeOperation.update);
 
-    const index = trackDb.findIndex((item) => item.id === id);
-    const updatedTrack = { ...trackDb[index], ...updateTrackDto };
-    trackDb[index] = updatedTrack;
+    const index = db.trackDb.findIndex((item) => item.id === id);
+    const updatedTrack = { ...db.trackDb[index], ...updateTrackDto };
+    db.trackDb[index] = updatedTrack;
 
     return updatedTrack;
   }
 
   deleteTrack(id: string) {
     this.validateTrackId(id);
-    const index = trackDb.findIndex((item) => item.id === id);
-    trackDb.splice(index, 1);
+    const index = db.trackDb.findIndex((item) => item.id === id);
+    db.trackDb.splice(index, 1);
     return 'The record is found and deleted';
   }
 
@@ -51,7 +51,7 @@ export class TrackService {
       throw new BadRequestException('Id is invalid (not uuid)'); // 400
     }
 
-    const track = trackDb.find((item) => item.id === id);
+    const track = db.trackDb.find((item) => item.id === id);
 
     if (!track) {
       throw new NotFoundException('This track is not exist'); // 404

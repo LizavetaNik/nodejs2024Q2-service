@@ -4,12 +4,7 @@ import {
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import {
-  albumDb,
-  artistsDb,
-  favoritesDb,
-  trackDb,
-} from 'src/database/database';
+import { db } from 'src/database/database';
 import { validate } from 'uuid';
 
 @Injectable()
@@ -19,22 +14,22 @@ export class FavoritesService {
     const albums = [];
     const artists = [];
 
-    favoritesDb.tracks.forEach((id) => {
-      const track = trackDb.find((track) => track.id === id);
+    db.favoritesDb.tracks.forEach((id) => {
+      const track = db.trackDb.find((track) => track.id === id);
       if (track) {
         tracks.push(track);
       }
     });
 
-    favoritesDb.albums.forEach((id) => {
-      const album = albumDb.find((album) => album.id === id);
+    db.favoritesDb.albums.forEach((id) => {
+      const album = db.albumDb.find((album) => album.id === id);
       if (album) {
         albums.push(album);
       }
     });
 
-    favoritesDb.artists.forEach((id) => {
-      const artist = artistsDb.find((artist) => artist.id === id);
+    db.favoritesDb.artists.forEach((id) => {
+      const artist = db.artistsDb.find((artist) => artist.id === id);
       if (artist) {
         artists.push(artist);
       }
@@ -49,61 +44,67 @@ export class FavoritesService {
 
   addAlbum(id: string) {
     this.validateId(id);
-    const index = albumDb.findIndex((album) => album.id === id);
+    const index = db.albumDb.findIndex((album) => album.id === id);
     if (index === -1) {
       throw new UnprocessableEntityException();
     }
-    favoritesDb.albums.push(id);
+    db.favoritesDb.albums.push(id);
     return index;
   }
 
   addArtist(id: string) {
     this.validateId(id);
-    const index = artistsDb.findIndex((artist) => artist.id === id);
+    const index = db.artistsDb.findIndex((artist) => artist.id === id);
     if (index === -1) {
       throw new UnprocessableEntityException();
     }
-    favoritesDb.artists.push(id);
+    db.favoritesDb.artists.push(id);
     return index;
   }
 
   addTrack(id: string) {
     this.validateId(id);
-    const index = trackDb.findIndex((track) => track.id === id);
+    const index = db.trackDb.findIndex((track) => track.id === id);
     if (index === -1) {
       throw new UnprocessableEntityException();
     }
-    favoritesDb.tracks.push(id);
+    db.favoritesDb.tracks.push(id);
     return index;
   }
 
   deleteTrack(id: string) {
     this.validateId(id);
-    const index = favoritesDb.tracks.findIndex((e) => e === id);
+    const index = db.favoritesDb.tracks.findIndex((e) => e === id);
     if (index === -1) {
       throw new NotFoundException('This track was not found in favorites');
     }
-    favoritesDb.tracks = favoritesDb.tracks.filter((track) => track !== id);
+    db.favoritesDb.tracks = db.favoritesDb.tracks.filter(
+      (track) => track !== id,
+    );
     return 'This track deleted';
   }
 
   deleteAlbum(id: string) {
     this.validateId(id);
-    const index = favoritesDb.albums.findIndex((e) => e === id);
+    const index = db.favoritesDb.albums.findIndex((e) => e === id);
     if (index === -1) {
       throw new NotFoundException('This album was not found in favorites');
     }
-    favoritesDb.albums = favoritesDb.albums.filter((album) => album !== id);
+    db.favoritesDb.albums = db.favoritesDb.albums.filter(
+      (album) => album !== id,
+    );
     return;
   }
 
   deleteArtist(id: string) {
     this.validateId(id);
-    const index = favoritesDb.artists.findIndex((e) => e === id);
+    const index = db.favoritesDb.artists.findIndex((e) => e === id);
     if (index === -1) {
       throw new NotFoundException('This track was not found in favorites');
     }
-    favoritesDb.artists = favoritesDb.artists.filter((artist) => artist !== id);
+    db.favoritesDb.artists = db.favoritesDb.artists.filter(
+      (artist) => artist !== id,
+    );
     return;
   }
 

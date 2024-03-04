@@ -1,6 +1,6 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
-import { albumDb, artistsDb, trackDb } from 'src/database/database';
+import { db } from 'src/database/database';
 import { ICreateAlbumDto } from './album-types';
 import { validate } from 'uuid';
 import { v4 as uuidv4 } from 'uuid';
@@ -8,14 +8,14 @@ import { v4 as uuidv4 } from 'uuid';
 @Injectable()
 export class AlbumService {
   getAlbums() {
-    return albumDb;
+    return db.albumDb;
   }
 
   createAlbum(albumDto: ICreateAlbumDto) {
     this.validateAlbumCreate(albumDto);
 
     const validatedArtistId =
-      albumDto.artistId && artistsDb.find((a) => a.id === albumDto.artistId)
+      albumDto.artistId && db.artistsDb.find((a) => a.id === albumDto.artistId)
         ? albumDto.artistId
         : null;
 
@@ -25,7 +25,7 @@ export class AlbumService {
       year: albumDto.year,
       artistId: validatedArtistId,
     };
-    albumDb.push(albumData);
+    db.albumDb.push(albumData);
     return albumData;
   }
 
@@ -37,11 +37,11 @@ export class AlbumService {
     this.validateAlbumId(id);
     this.validateAlbumCreate(updateAlbumDto);
 
-    const index = albumDb.findIndex((album) => album.id === id);
-    const album = albumDb[index];
+    const index = db.albumDb.findIndex((album) => album.id === id);
+    const album = db.albumDb[index];
     const validatedArtistId =
       updateAlbumDto.artistId &&
-      artistsDb.find((a) => a.id === updateAlbumDto.artistId)
+      db.artistsDb.find((a) => a.id === updateAlbumDto.artistId)
         ? updateAlbumDto.artistId
         : null;
     const newAlbumData = {
@@ -51,17 +51,17 @@ export class AlbumService {
       artistId: validatedArtistId,
     };
 
-    albumDb[index] = newAlbumData;
-    return albumDb[index];
+    db.albumDb[index] = newAlbumData;
+    return db.albumDb[index];
   }
 
   deleteAlbum(id: string) {
     this.validateAlbumId(id);
-    const index = albumDb.findIndex((item) => item.id === id);
-    trackDb.forEach((track) => {
+    const index = db.albumDb.findIndex((item) => item.id === id);
+    db.trackDb.forEach((track) => {
       if (track.albumId === id) track.albumId = null;
     });
-    albumDb.splice(index, 1);
+    db.albumDb.splice(index, 1);
     return null;
   }
 
@@ -70,7 +70,7 @@ export class AlbumService {
       throw new BadRequestException('Id is invalid (not uuid)'); // 400
     }
 
-    const album = albumDb.find((item) => item.id === id);
+    const album = db.albumDb.find((item) => item.id === id);
 
     if (!album) {
       throw new NotFoundException('This album is not exist'); // 404

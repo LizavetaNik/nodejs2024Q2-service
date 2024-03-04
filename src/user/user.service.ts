@@ -3,14 +3,14 @@ import {
   ForbiddenException,
   NotFoundException,
 } from '@nestjs/common';
-import { usersDb } from 'src/database/database';
+import { db } from 'src/database/database';
 import { ICreateUserDto, IUpdatePasswordDto } from './user-types';
 import { v4 as uuidv4 } from 'uuid';
 import { validate } from 'uuid';
 
 export class UserService {
   getUsers() {
-    return usersDb;
+    return db.usersDb;
   }
 
   createUser(userDto: ICreateUserDto) {
@@ -26,7 +26,7 @@ export class UserService {
       createdAt: Number(Date.now()),
       updatedAt: Number(Date.now()),
     };
-    usersDb.push(newUser);
+    db.usersDb.push(newUser);
 
     const { ...rest } = newUser;
     delete rest.password;
@@ -59,8 +59,8 @@ export class UserService {
       updatedAt: Number(Date.now()),
     };
 
-    const index = usersDb.findIndex((item) => item.id === id);
-    usersDb[index] = newUser;
+    const index = db.usersDb.findIndex((item) => item.id === id);
+    db.usersDb[index] = newUser;
 
     delete newUser.password;
     return newUser;
@@ -68,8 +68,8 @@ export class UserService {
 
   deleteUser(id: string) {
     this.validateUserId(id);
-    const index = usersDb.findIndex((item) => item.id === id);
-    usersDb.splice(index, 1);
+    const index = db.usersDb.findIndex((item) => item.id === id);
+    db.usersDb.splice(index, 1);
     return 'The record is found and deleted';
   }
 
@@ -78,7 +78,7 @@ export class UserService {
       throw new BadRequestException('Id is invalid (not uuid)'); // 400
     }
 
-    const user = usersDb.find((item) => item.id === id);
+    const user = db.usersDb.find((item) => item.id === id);
     if (!user) {
       throw new NotFoundException('This user is not exist'); // 404
     }
