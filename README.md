@@ -1,72 +1,17 @@
 # Home Library Service
 
-## Prerequisites
+# For run need:
 
-- Git - [Download & Install Git](https://git-scm.com/downloads).
-- Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
-
-## Downloading
-
-```
-git clone {repository URL}
-```
-
-## Installing NPM modules
-
-```
-npm install
-```
-
-## Running application
-
-```
-npm start
-```
-
-After starting the app on port (4000 as default) you can open
-in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
-For more information about OpenAPI/Swagger please visit https://swagger.io/.
-
-## Testing
-
-After application running open new terminal and enter:
-
-To run all tests without authorization
-
-```
-npm run test
-```
-
-To run only one of all test suites
-
-```
-npm run test -- <path to suite>
-```
-
-To run all test with authorization
-
-```
-npm run test:auth
-```
-
-To run only specific test suite with authorization
-
-```
-npm run test:auth -- <path to suite>
-```
+- clone this repository wiht branch `b develop_part1`
+  `git clone git@github.com:LizavetaNik/nodejs2024Q2-service.git -b develop_part1`
+- open app `cd nodejs2024Q2-service`
+- run `npm install` to install
+- if you want, you can create a file `.env` and write your port, for example `PORT=4002`,
+  but the default port is used `PORT=4000`
+- npm start and
+  npm run test test/favorites.e2e.spec.ts test/users.e2e.spec.ts test/artists.e2e.spec.ts test/albums.e2e.spec.ts test/tracks.e2e.spec.ts
 
 ### Auto-fix and format
 
-```
-npm run lint
-```
-
-```
-npm run format
-```
-
-### Debugging in VSCode
-
-Press <kbd>F5</kbd> to debug.
-
-For more information, visit: https://code.visualstudio.com/docs/editor/debugging
+- npm run lint
+- npm run format
