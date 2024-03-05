@@ -1,14 +1,15 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { db } from 'src/database/database';
-import { ICreateArtistDto, IUpdateArtistDto } from './artist-types';
 import { v4 as uuidv4 } from 'uuid';
+import { CreateArtistDto } from './dto/create-artist.dto';
+import { UpdateArtistDto } from './dto/update-artist.dto';
 
 export class ArtistService {
   getArtists() {
     return db.artistsDb;
   }
 
-  createArtist(artistDto: ICreateArtistDto) {
+  createArtist(artistDto: CreateArtistDto) {
     this.validateNameAndGrammy(artistDto);
 
     const artistData = {
@@ -24,7 +25,7 @@ export class ArtistService {
     return this.validateArtistId(id);
   }
 
-  updateArtist(id: string, updateArtistDto: IUpdateArtistDto) {
+  updateArtist(id: string, updateArtistDto: UpdateArtistDto) {
     this.validateArtistId(id);
     this.validateUpdateArtist(updateArtistDto);
 
@@ -71,7 +72,7 @@ export class ArtistService {
     return artist;
   }
 
-  private validateNameAndGrammy(createArtistDto: ICreateArtistDto) {
+  private validateNameAndGrammy(createArtistDto: CreateArtistDto) {
     const { name, grammy } = createArtistDto;
 
     if (!(name && grammy)) {
@@ -79,7 +80,7 @@ export class ArtistService {
     }
   }
 
-  private validateUpdateArtist(updateArtistDto: IUpdateArtistDto) {
+  private validateUpdateArtist(updateArtistDto: UpdateArtistDto) {
     const { name, grammy } = updateArtistDto;
 
     if (

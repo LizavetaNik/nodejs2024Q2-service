@@ -1,9 +1,9 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
 import { db } from 'src/database/database';
-import { ICreateAlbumDto } from './album-types';
 import { validate } from 'uuid';
 import { v4 as uuidv4 } from 'uuid';
+import { CreateAlbumDto } from './dto/album.dto';
 
 @Injectable()
 export class AlbumService {
@@ -11,7 +11,7 @@ export class AlbumService {
     return db.albumDb;
   }
 
-  createAlbum(albumDto: ICreateAlbumDto) {
+  createAlbum(albumDto: CreateAlbumDto) {
     this.validateAlbumCreate(albumDto);
 
     const validatedArtistId =
@@ -33,7 +33,7 @@ export class AlbumService {
     return this.validateAlbumId(id);
   }
 
-  updateAlbum(id: string, updateAlbumDto: ICreateAlbumDto) {
+  updateAlbum(id: string, updateAlbumDto: CreateAlbumDto) {
     this.validateAlbumId(id);
     this.validateAlbumCreate(updateAlbumDto);
 
@@ -79,7 +79,7 @@ export class AlbumService {
     return album;
   }
 
-  private validateAlbumCreate(albumDto: ICreateAlbumDto) {
+  private validateAlbumCreate(albumDto: CreateAlbumDto) {
     const { name, artistId, year } = albumDto;
 
     if (!albumDto || typeof name !== 'string' || typeof year !== 'number') {

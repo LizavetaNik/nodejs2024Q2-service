@@ -9,7 +9,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { AlbumService } from './album.service';
-import { ICreateAlbumDto } from './album-types';
+import { CreateAlbumDto } from './dto/album.dto';
 
 @Controller('album')
 export class AlbumController {
@@ -27,16 +27,13 @@ export class AlbumController {
 
   @Post()
   @HttpCode(201)
-  create(@Body() albumDto: ICreateAlbumDto) {
+  create(@Body() albumDto: CreateAlbumDto) {
     return this.AlbumServ.createAlbum(albumDto);
   }
 
   @Put(':id')
   @HttpCode(200)
-  updateAlbum(
-    @Param('id') id: string,
-    @Body() updateAlbumDto: ICreateAlbumDto,
-  ) {
+  updateAlbum(@Param('id') id: string, @Body() updateAlbumDto: CreateAlbumDto) {
     return this.AlbumServ.updateAlbum(id, updateAlbumDto);
   }
 

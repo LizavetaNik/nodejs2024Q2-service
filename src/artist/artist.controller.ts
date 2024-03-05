@@ -9,8 +9,9 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { ICreateArtistDto, IUpdateArtistDto } from './artist-types';
 import { ArtistService } from './artist.service';
+import { CreateArtistDto } from './dto/create-artist.dto';
+import { UpdateArtistDto } from './dto/update-artist.dto';
 
 @Controller('artist')
 export class ArtistController {
@@ -28,7 +29,7 @@ export class ArtistController {
 
   @Post()
   @HttpCode(201)
-  create(@Body() artistDto: ICreateArtistDto) {
+  create(@Body() artistDto: CreateArtistDto) {
     return this.ArtistServ.createArtist(artistDto);
   }
 
@@ -36,7 +37,7 @@ export class ArtistController {
   @HttpCode(200)
   updateArtist(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() updateArtistDto: IUpdateArtistDto,
+    @Body() updateArtistDto: UpdateArtistDto,
   ) {
     return this.ArtistServ.updateArtist(id, updateArtistDto);
   }

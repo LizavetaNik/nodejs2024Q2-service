@@ -1,16 +1,16 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { db } from 'src/database/database';
-import { ITrackDto } from './track-types';
-import { validate } from 'uuid';
 import { v4 as uuidv4 } from 'uuid';
 import { ITypeOperation } from 'src/types/types';
+import { UpdateTrackDto } from './dto/update-track.dto';
+import { CreateTrackDto } from './dto/create-track.dto';
 
 export class TrackService {
   getTracks() {
     return db.trackDb;
   }
 
-  createTrack(trackDto: ITrackDto) {
+  createTrack(trackDto: CreateTrackDto) {
     this.validateArtistAndAlbum(trackDto, ITypeOperation.create);
 
     const trackData = {
@@ -28,7 +28,7 @@ export class TrackService {
     return this.validateTrackId(id);
   }
 
-  updateTrack(id: string, updateTrackDto: ITrackDto) {
+  updateTrack(id: string, updateTrackDto: UpdateTrackDto) {
     this.validateTrackId(id);
     this.validateArtistAndAlbum(updateTrackDto, ITypeOperation.update);
 
@@ -57,7 +57,7 @@ export class TrackService {
   }
 
   private validateArtistAndAlbum(
-    updateTrackDto: ITrackDto,
+    updateTrackDto: UpdateTrackDto,
     typeOperation: ITypeOperation,
   ) {
     const { name, artistId, albumId, duration } = updateTrackDto;
