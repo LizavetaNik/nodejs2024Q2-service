@@ -1,7 +1,6 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { db } from 'src/database/database';
 import { ICreateArtistDto, IUpdateArtistDto } from './artist-types';
-import { validate } from 'uuid';
 import { v4 as uuidv4 } from 'uuid';
 
 export class ArtistService {
@@ -63,10 +62,6 @@ export class ArtistService {
   }
 
   private validateArtistId(id: string) {
-    if (!validate(id)) {
-      throw new BadRequestException('Id is invalid (not uuid)'); // 400
-    }
-
     const artist = db.artistsDb.find((item) => item.id === id);
 
     if (!artist) {

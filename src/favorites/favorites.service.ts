@@ -1,11 +1,9 @@
 import {
-  BadRequestException,
   Injectable,
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { db } from 'src/database/database';
-import { validate } from 'uuid';
 
 @Injectable()
 export class FavoritesService {
@@ -43,7 +41,6 @@ export class FavoritesService {
   }
 
   addAlbum(id: string) {
-    this.validateId(id);
     const index = db.albumDb.findIndex((album) => album.id === id);
     if (index === -1) {
       throw new UnprocessableEntityException();
@@ -53,7 +50,6 @@ export class FavoritesService {
   }
 
   addArtist(id: string) {
-    this.validateId(id);
     const index = db.artistsDb.findIndex((artist) => artist.id === id);
     if (index === -1) {
       throw new UnprocessableEntityException();
@@ -63,7 +59,6 @@ export class FavoritesService {
   }
 
   addTrack(id: string) {
-    this.validateId(id);
     const index = db.trackDb.findIndex((track) => track.id === id);
     if (index === -1) {
       throw new UnprocessableEntityException();
@@ -73,7 +68,6 @@ export class FavoritesService {
   }
 
   deleteTrack(id: string) {
-    this.validateId(id);
     const index = db.favoritesDb.tracks.findIndex((e) => e === id);
     if (index === -1) {
       throw new NotFoundException('This track was not found in favorites');
@@ -85,7 +79,6 @@ export class FavoritesService {
   }
 
   deleteAlbum(id: string) {
-    this.validateId(id);
     const index = db.favoritesDb.albums.findIndex((e) => e === id);
     if (index === -1) {
       throw new NotFoundException('This album was not found in favorites');
@@ -97,7 +90,6 @@ export class FavoritesService {
   }
 
   deleteArtist(id: string) {
-    this.validateId(id);
     const index = db.favoritesDb.artists.findIndex((e) => e === id);
     if (index === -1) {
       throw new NotFoundException('This track was not found in favorites');
@@ -105,13 +97,6 @@ export class FavoritesService {
     db.favoritesDb.artists = db.favoritesDb.artists.filter(
       (artist) => artist !== id,
     );
-    return;
-  }
-
-  private validateId(id: string) {
-    if (!validate(id)) {
-      throw new BadRequestException('Id is invalid (not uuid)'); // 400
-    }
     return;
   }
 }

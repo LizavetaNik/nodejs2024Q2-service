@@ -47,10 +47,6 @@ export class TrackService {
   }
 
   private validateTrackId(id: string) {
-    if (!validate(id)) {
-      throw new BadRequestException('Id is invalid (not uuid)'); // 400
-    }
-
     const track = db.trackDb.find((item) => item.id === id);
 
     if (!track) {

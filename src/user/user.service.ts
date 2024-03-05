@@ -4,16 +4,16 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { db } from 'src/database/database';
-import { ICreateUserDto, IUpdatePasswordDto } from './user-types';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdatePasswordDto } from './dto/update-user.dto';
 import { v4 as uuidv4 } from 'uuid';
-import { validate } from 'uuid';
 
 export class UserService {
   getUsers() {
     return db.usersDb;
   }
 
-  createUser(userDto: ICreateUserDto) {
+  createUser(userDto: CreateUserDto) {
     if (!(userDto.login && userDto.password)) {
       throw new BadRequestException('Invalid data'); // 400
     }
@@ -37,7 +37,7 @@ export class UserService {
     return this.validateUserId(id);
   }
 
-  updateUser(id: string, updateUserDto: IUpdatePasswordDto) {
+  updateUser(id: string, updateUserDto: UpdatePasswordDto) {
     if (
       !(updateUserDto.oldPassword && updateUserDto.newPassword) ||
       typeof updateUserDto.oldPassword !== 'string' ||
@@ -74,10 +74,6 @@ export class UserService {
   }
 
   private validateUserId(id: string) {
-    if (!validate(id)) {
-      throw new BadRequestException('Id is invalid (not uuid)'); // 400
-    }
-
     const user = db.usersDb.find((item) => item.id === id);
     if (!user) {
       throw new NotFoundException('This user is not exist'); // 404

@@ -5,11 +5,13 @@ import {
   Get,
   HttpCode,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { ICreateUserDto, IUpdatePasswordDto } from './user-types';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdatePasswordDto } from './dto/update-user.dto';
 
 @Controller('user')
 export class UserController {
@@ -22,27 +24,27 @@ export class UserController {
 
   @Post()
   @HttpCode(201)
-  create(@Body() userDto: ICreateUserDto) {
+  create(@Body() userDto: CreateUserDto) {
     return this.UserServ.createUser(userDto);
   }
 
   @Get(':id')
-  getUser(@Param('id') id: string) {
+  getUser(@Param('id', ParseUUIDPipe) id: string) {
     return this.UserServ.getUser(id);
   }
 
   @Put(':id')
   @HttpCode(200)
   updateUser(
-    @Param('id') id: string,
-    @Body() updateUserDto: IUpdatePasswordDto,
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() updateUserDto: UpdatePasswordDto,
   ) {
     return this.UserServ.updateUser(id, updateUserDto);
   }
 
   @Delete(':id')
   @HttpCode(204)
-  deleteUser(@Param('id') id: string) {
+  deleteUser(@Param('id', ParseUUIDPipe) id: string) {
     return this.UserServ.deleteUser(id);
   }
 }
