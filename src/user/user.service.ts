@@ -8,7 +8,6 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-user.dto';
 import { DatabaseService } from 'src/database/database.service';
 import { omit } from 'lodash';
-import { compare, hash } from 'bcrypt';
 
 @Injectable()
 export class UserService {
