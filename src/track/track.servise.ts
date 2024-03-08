@@ -1,59 +1,69 @@
-import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { db } from 'src/database/database';
-import { v4 as uuidv4 } from 'uuid';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { ITypeOperation } from 'src/types/types';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { CreateTrackDto } from './dto/create-track.dto';
+import { DatabaseService } from 'src/database/database.service';
 
+@Injectable()
 export class TrackService {
-  getTracks() {
-    return db.trackDb;
+  constructor(private readonly databaseService: DatabaseService) {}
+
+  async getTracks() {
+    const trackDb = await this.databaseService.track.findMany();
+    return trackDb;
   }
 
-  createTrack(trackDto: CreateTrackDto) {
+  async createTrack(trackDto: CreateTrackDto) {
     this.validateArtistAndAlbum(trackDto, ITypeOperation.create);
 
-    const trackData = {
-      id: uuidv4(),
-      name: trackDto.name,
-      duration: trackDto.duration,
-      artistId: trackDto?.artistId || null,
-      albumId: trackDto?.albumId || null,
-    };
-    db.trackDb.push(trackData);
-    return trackData;
+    const track = await this.databaseService.track.create({ data: trackDto });
+
+    return track;
   }
 
-  getTrack(id: string) {
-    return this.validateTrackId(id);
+  async getTrack(id: string) {
+    const track = await this.databaseService.track.findUnique({
+      where: { id },
+    });
+    if (!track) {
+      throw new NotFoundException('This track does not exist'); // 404
+    }
+
+    return track;
   }
 
-  updateTrack(id: string, updateTrackDto: UpdateTrackDto) {
-    this.validateTrackId(id);
+  async updateTrack(id: string, updateTrackDto: UpdateTrackDto) {
+    const track = await this.databaseService.track.findUnique({
+      where: { id },
+    });
+    if (!track) {
+      throw new NotFoundException('This track does not exist'); // 404
+    }
+
     this.validateArtistAndAlbum(updateTrackDto, ITypeOperation.update);
 
-    const index = db.trackDb.findIndex((item) => item.id === id);
-    const updatedTrack = { ...db.trackDb[index], ...updateTrackDto };
-    db.trackDb[index] = updatedTrack;
+    const updatedTrack = await this.databaseService.track.update({
+      where: { id },
+      data: updateTrackDto,
+    });
 
     return updatedTrack;
   }
 
-  deleteTrack(id: string) {
-    this.validateTrackId(id);
-    const index = db.trackDb.findIndex((item) => item.id === id);
-    db.trackDb.splice(index, 1);
-    return 'The record is found and deleted';
-  }
-
-  private validateTrackId(id: string) {
-    const track = db.trackDb.find((item) => item.id === id);
-
+  async deleteTrack(id: string) {
+    const track = await this.databaseService.track.findUnique({
+      where: { id },
+    });
     if (!track) {
-      throw new NotFoundException('This track is not exist'); // 404
+      throw new NotFoundException('This track does not exist'); // 404 !
     }
-
-    return track;
+    await this.databaseService.track.delete({
+      where: { id },
+    });
   }
 
   private validateArtistAndAlbum(
