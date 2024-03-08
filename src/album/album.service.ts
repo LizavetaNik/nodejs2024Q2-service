@@ -1,21 +1,27 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
-import { db } from 'src/database/database';
-import { validate } from 'uuid';
 import { v4 as uuidv4 } from 'uuid';
 import { CreateAlbumDto } from './dto/album.dto';
+import { DatabaseService } from 'src/database/database.service';
+import { UpdateAlbumDto } from './dto/update-album.dto';
 
 @Injectable()
 export class AlbumService {
-  getAlbums() {
-    return db.albumDb;
+  constructor(private readonly databaseService: DatabaseService) {}
+
+  async getAlbums() {
+    const album = await this.databaseService.album.findMany();
+    return album;
   }
 
-  createAlbum(albumDto: CreateAlbumDto) {
+  async createAlbum(albumDto: CreateAlbumDto) {
     this.validateAlbumCreate(albumDto);
 
     const validatedArtistId =
-      albumDto.artistId && db.artistsDb.find((a) => a.id === albumDto.artistId)
+      albumDto.artistId &&
+      (await this.databaseService.artist.findUnique({
+        where: { id: albumDto.artistId },
+      }))
         ? albumDto.artistId
         : null;
 
@@ -25,58 +31,67 @@ export class AlbumService {
       year: albumDto.year,
       artistId: validatedArtistId,
     };
-    db.albumDb.push(albumData);
-    return albumData;
+    return this.databaseService.album.create({ data: albumData });
   }
 
-  getAlbum(id: string) {
-    return this.validateAlbumId(id);
-  }
-
-  updateAlbum(id: string, updateAlbumDto: CreateAlbumDto) {
-    this.validateAlbumId(id);
-    this.validateAlbumCreate(updateAlbumDto);
-
-    const index = db.albumDb.findIndex((album) => album.id === id);
-    const album = db.albumDb[index];
-    const validatedArtistId =
-      updateAlbumDto.artistId &&
-      db.artistsDb.find((a) => a.id === updateAlbumDto.artistId)
-        ? updateAlbumDto.artistId
-        : null;
-    const newAlbumData = {
-      id: album.id,
-      name: updateAlbumDto.name || album.name,
-      year: updateAlbumDto.year || album.year,
-      artistId: validatedArtistId,
-    };
-
-    db.albumDb[index] = newAlbumData;
-    return db.albumDb[index];
-  }
-
-  deleteAlbum(id: string) {
-    this.validateAlbumId(id);
-    const index = db.albumDb.findIndex((item) => item.id === id);
-    db.trackDb.forEach((track) => {
-      if (track.albumId === id) track.albumId = null;
+  async getAlbum(id: string) {
+    const album = await this.databaseService.album.findUnique({
+      where: { id },
     });
-    db.albumDb.splice(index, 1);
-    return null;
-  }
-
-  private validateAlbumId(id: string) {
-    if (!validate(id)) {
-      throw new BadRequestException('Id is invalid (not uuid)'); // 400
-    }
-
-    const album = db.albumDb.find((item) => item.id === id);
 
     if (!album) {
       throw new NotFoundException('This album is not exist'); // 404
     }
 
     return album;
+  }
+
+  async updateAlbum(id: string, updateAlbumDto: UpdateAlbumDto) {
+    this.validateAlbumCreate(updateAlbumDto);
+
+    const album = await this.databaseService.album.findUnique({
+      where: { id },
+    });
+
+    if (!album) {
+      throw new NotFoundException('This album is not exist'); // 404
+    }
+
+    let validatedArtistId = null;
+    if (updateAlbumDto.artistId) {
+      const artist = await this.databaseService.artist.findUnique({
+        where: { id: updateAlbumDto.artistId },
+      });
+      if (artist) {
+        validatedArtistId = updateAlbumDto.artistId;
+      }
+    }
+
+    const updatedAlbum = await this.databaseService.album.update({
+      where: { id },
+      data: {
+        name: updateAlbumDto.name || album.name,
+        year: updateAlbumDto.year || album.year,
+        artistId: validatedArtistId,
+      },
+    });
+    return updatedAlbum;
+  }
+
+  async deleteAlbum(id: string) {
+    const album = await this.databaseService.album.findUnique({
+      where: { id },
+    });
+
+    if (!album) {
+      throw new NotFoundException('This album is not exist'); // 404
+    }
+
+    await this.databaseService.track.updateMany({
+      where: { albumId: id },
+      data: { albumId: null },
+    });
+    return this.databaseService.album.delete({ where: { id } });
   }
 
   private validateAlbumCreate(albumDto: CreateAlbumDto) {
