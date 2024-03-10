@@ -12,7 +12,7 @@
 
 # For test:
 
-`npm run test test/favorites.e2e.spec.ts test/users.e2e.spec.ts test/artists.e2e.spec.ts test/albums.e2e.spec.ts test/tracks.e2e.spec.ts`
+`npm run test`
 
 # For doc:
 
