@@ -3,16 +3,17 @@
 # For run need:
 
 - clone this repository wiht branch `b develop_part1`
-  `git clone git@github.com:LizavetaNik/nodejs2024Q2-service.git -b develop_part1`
+  `git clone git@github.com:LizavetaNik/nodejs2024Q2-service.git -b develop_part2`
 - open app `cd nodejs2024Q2-service`
 - run `npm install` to install
-- if you want, you can create a file `.env` and write your port, for example `PORT=4002`,
-  but the default port is used `PORT=4000`
-- npm start
+- if you want, you can write your data in the file `.env`
+- running docker containers `docker-compose up`
+- apply migration `npx prisma migrate dev`
+- `npm start`
 
 # For test:
 
-`npm run test test/favorites.e2e.spec.ts test/users.e2e.spec.ts test/artists.e2e.spec.ts test/albums.e2e.spec.ts test/tracks.e2e.spec.ts`
+`npm run test`
 
 # For doc:
 
