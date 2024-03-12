@@ -5,7 +5,6 @@ import {
 } from '@nestjs/common';
 import { IAlbum } from 'src/album/type/album-types';
 import { IArtist } from 'src/artist/type/artist-types';
-import { db } from 'src/database/database';
 import { DatabaseService } from 'src/database/database.service';
 import { ITrack } from 'src/track/type/track-types';
 
