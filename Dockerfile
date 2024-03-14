@@ -1,10 +1,12 @@
 FROM node:18-alpine
 
-WORKDIR /src
+WORKDIR /app
 
 COPY package.json package-lock.json ./
 
 RUN npm install --production && npm cache clean --force
+
+RUN npm install -g @nestjs/cli
 
 COPY . .
 

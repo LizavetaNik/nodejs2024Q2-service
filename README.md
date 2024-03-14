@@ -7,17 +7,8 @@
 - open app `cd nodejs2024Q2-service`
 - run `npm install` to install
 - if you want, you can write your data in the file `.env`
-- running docker containers `docker-compose up`
-- apply migration `npx prisma migrate dev`
-- `npm start`
-
-# For test:
-
-`npm run test`
-
-# For doc:
-
-`http://localhost:{'your port'}/doc/`
+- start the docker containers `npm run docker:build:up`
+- start the test `npm run test`
 
 ### Auto-fix and format
 
@@ -26,8 +17,8 @@
 
 ### Pull docker image from docker hub
 
-- `docker push lizavetanikiforova/nodejs2024q2-service-app`
-- `docker run -d -p 5435:5435 --rm --name nodejs2024q2-service-app lizavetanikiforova/nodejs2024q2-service-app`
+- `docker push lizavetanikiforova/nodejs2024q2-service-app-home-lib`
+- `docker run -d -p 5435:5435 --rm --name nodejs2024q2-service-app-home-lib lizavetanikiforova/nodejs2024q2-service-app-home-lib`
 
 ### Check user-defined bridge
 
