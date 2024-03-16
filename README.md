@@ -10,6 +10,10 @@
 - start the docker containers `npm run docker:build:up`
 - start the test `npm run test`
 
+# For doc:
+
+`http://localhost:{'your port'}/doc/`
+
 ### Auto-fix and format
 
 - npm run lint
