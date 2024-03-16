@@ -1,15 +1,19 @@
-FROM node:18-alpine
+FROM node:20.11-alpine as build
 
 WORKDIR /app
 
 COPY package.json package-lock.json ./
 
-RUN npm install --production && npm cache clean --force
-
-RUN npm install -g @nestjs/cli
+RUN npm install
 
 COPY . .
 
-RUN npx prisma generate
+FROM node:20.11-alpine as start
+
+WORKDIR /app
+
+COPY --from=build /app /app
 
 EXPOSE 4000
+
+CMD npx prisma migrate dev && npm run start:dev

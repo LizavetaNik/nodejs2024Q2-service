@@ -1,43 +1,35 @@
 version: '3.8'
-networks:
-  nodejs2024q2-service_default:
-    driver: bridge
 
 services:
   app:
-    image: lizavetanikiforova/nodejs2024q2-service-app-home-lib
-    restart: always
     build:
       context: .
     ports:
       - ${PORT}:${PORT}
     depends_on:
       - postgres
-    env_file:
-      - .env
+    environment:
+      - PORT=${PORT}
+      - DATABASE_URL=${DATABASE_URL}
     networks:
       - nodejs2024q2-service_default
     volumes:
       - ./:/app
       - /app/node_modules
-    command: ['npm', 'run', 'migrate:start:dev']
+    restart: always
 
   postgres:
-    image: postgres:13.5
+    build:
+      context: src/database/
     restart: always
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - PGDATA=/var/lib/postgresql/data/pgdata
-    command:
-      ['postgres', '-c', 'logging_collector=true', '-c', 'log_statement=all']
     volumes:
       - postgres:/var/lib/postgresql/data
     ports:
       - '${POSTGRES_PORT}:${POSTGRES_PORT}'
-    env_file:
-      - .env
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U postgres -d home_library_db']
       interval: 1m30s
@@ -49,3 +41,7 @@ services:
 
 volumes:
   postgres:
+
+networks:
+  nodejs2024q2-service_default:
+    driver: bridge

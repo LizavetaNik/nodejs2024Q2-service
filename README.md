@@ -15,16 +15,6 @@
 - npm run lint
 - npm run format
 
-### Pull docker image from docker hub
+### Link from docker hub
 
-- `docker push lizavetanikiforova/nodejs2024q2-service-app-home-lib`
-- `docker run -d -p 5435:5435 --rm --name nodejs2024q2-service-app-home-lib lizavetanikiforova/nodejs2024q2-service-app-home-lib`
-
-### Check user-defined bridge
-
-- `docker network ls`
-- `docker network inspect bridge`
-
-### Scan image vulnerabilities
-
-- `npm run docker:scan`
+- `https://hub.docker.com/repository/docker/lizavetanikiforova/nodejs2024q2-service-app/general`
