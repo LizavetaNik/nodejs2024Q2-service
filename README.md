@@ -2,7 +2,7 @@
 
 # For run need:
 
-- clone this repository wiht branch `b develop_part1`
+- clone this repository wiht branch `b develop_part2`
   `git clone git@github.com:LizavetaNik/nodejs2024Q2-service.git -b develop_part2`
 - open app `cd nodejs2024Q2-service`
 - run `npm install` to install

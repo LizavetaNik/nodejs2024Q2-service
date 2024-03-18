@@ -22,8 +22,8 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "migrate:start:dev": "prisma migrate deploy && nest start --watch",
     "docker:build:up": "docker-compose up --build",
-    "docker:scan": "docker scout cves postgres:13.5 && docker scout cves lizavetanikiforova/nodejs2023q2-service-app",
-    "docker:scan:postgres": "docker scout cves postgres:13.5",
+    "docker:scan": "docker scout cves postgres:16.2 && docker scout cves lizavetanikiforova/nodejs2023q2-service-app",
+    "docker:scan:postgres": "docker scout cves postgres:16.2",
     "docker:scan:app": "docker scout cves lizavetanikiforova/nodejs2023q2-service-app"
   },
   "dependencies": {
