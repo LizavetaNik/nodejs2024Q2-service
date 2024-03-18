@@ -35,7 +35,7 @@ export class AuthService {
       where: { login: loginDto.login },
     });
     if (!user) {
-      throw new NotFoundException('This album is not exist'); // 404
+      throw new NotFoundException('This user is not exist'); // 404
     }
     const payload = {
       userId: user.id,
@@ -54,7 +54,7 @@ export class AuthService {
 
   async refresh(refreshDto: RefreshDto) {
     if (!refreshDto.refreshToken) {
-      throw new NotFoundException('This album is not exist'); // 404
+      throw new NotFoundException('This token is not exist'); // 404
     }
 
     const refreshData = this.jwt.verify(refreshDto.refreshToken, {
@@ -65,7 +65,7 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new NotFoundException('This album is not exist'); // 404
+      throw new NotFoundException('This token is not exist'); // 404
     }
     const payload = {
       userId: user.id,
